@@ -1,0 +1,6 @@
+Ventana CMD
+C:\VideoLAN\VLC>vlc.exe -I dummy -vvv SPARTAAM_Nocturna_1minuto.mp4 --sout=#transcode{vcodec=h264,vb=0,scale=0,acodec=mp4a,ab=128,channels=2,samplerate=4100}:udp{dst=201.168.1.100:9000} :no-sout-rtp-sap :no-sout-standard-sap :ttl=1 :sout-keep
+
+
+Ventana VLC
+C:\VideoLAN\VLC>vlc.exe -vvv SPARTAAM_Nocturna_1minuto.mp4 --sout=#transcode{vcodec=h264,vb=0,scale=0,acodec=mp4a,ab=128,channels=2,samplerate=4100}:udp{dst=201.168.1.100:9000} :no-sout-rtp-sap :no-sout-standard-sap :ttl=1 :sout-keep
