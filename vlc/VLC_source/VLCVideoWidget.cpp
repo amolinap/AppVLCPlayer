@@ -184,7 +184,8 @@ void VLCVideoWidget::addURL(const QString url, bool isRTSP)
 
 void VLCVideoWidget::record()
 {
-    vlcDisplay->recordVideo();
+    //vlcDisplay->recordVideo();
+    vlcDisplay->emitVideo();
 }
 
 void VLCVideoWidget::changePATH(const QString &path)

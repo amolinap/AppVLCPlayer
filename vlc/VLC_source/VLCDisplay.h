@@ -129,6 +129,7 @@ public slots:
     void setVideoURL(const QString& url);
     /** @brief Return the URL of video storage */
     QString getVideoURL();
+    void emitVideo();
 
 protected:
     /** @brief Saved if video player is URL RTSP */

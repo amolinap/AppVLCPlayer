@@ -21,15 +21,9 @@ VLCDisplay::VLCDisplay(const QString path, QWidget *parent) :
     videoURL = "rtsp://192.168.1.90:554/axis-media/media.amp";
     startTime=-1;
 
-    createInstanceVLC("C:\\SPARTAAM_Nocturna_1minuto.mp4");
+    createInstanceVLC("C:\\GOPR4440.mp4");
     mediaPlayer = libvlc_media_player_new_from_media(media);
-    //libvlc_media_player_set_xwindow(mediaPlayer, ui->frame->winId());
     libvlc_media_player_set_hwnd(mediaPlayer, (void*)ui->frame->winId());
-    //libvlc_media_player_play(mediaPlayer);
-
-//    vlcMacWidget = new VLCMacWidget(mediaPlayer, ui->groupBox);
-//    vlcMacWidget->setMinimumHeight(ui->groupBox->height());
-//    vlcMacWidget->setMinimumWidth(ui->groupBox->width());
 
     readingSizeFile = false;
     fileSubtitles = NULL;
@@ -40,16 +34,7 @@ VLCDisplay::VLCDisplay(const QString path, QWidget *parent) :
 
 VLCDisplay::~VLCDisplay()
 {
-//    if(instance)
-//    {
-//        libvlc_release(instance);
-//    }
-
     stopRecorVideo();
-
-    //delete mediaPlayer;
-    //delete media;
-    //delete vlcMacWidget;
 
     delete ui;
 }
@@ -63,8 +48,6 @@ void VLCDisplay::playVideo()
     }
     else
     {
-        //libvlc_media_player_set_xwindow(mediaPlayer, ui->frame->winId());
-        //libvlc_media_player_set_hwnd(mediaPlayer, (void*)ui->groupBox->winId());
         libvlc_media_player_play(mediaPlayer);
         isPlay = true;
     }
@@ -108,10 +91,7 @@ void VLCDisplay::addURL(const QString url, bool isRTSP)
 
     QString newUrl = url;
 
-    //newUrl.replace('/', "\\" );
-    qDebug()<< url;
-    qDebug()<< newUrl;
-
+    newUrl.replace('/', "\\" );
     createInstanceVLC(qtu(newUrl));
     libvlc_media_player_set_media(mediaPlayer, media);
 
@@ -357,6 +337,15 @@ void VLCDisplay::closeEvent(QCloseEvent *event)
 //    else
 //        stopRecorVideo();
 //}
+void VLCDisplay::emitVideo()
+{
+    QStringList arguments;
+    arguments<<"/C"<<"ipconfig";
+
+    processRecord.start("cmd.exe", arguments);
+    processRecord.waitForFinished(1000);
+    qDebug()<<processRecord.readAll();
+}
 
 void VLCDisplay::runRecordVideo()
 {
