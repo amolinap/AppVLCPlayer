@@ -78,7 +78,7 @@ void VLCVideoWidget::createControlsVLC()
 
     btRecord = new QPushButton(QIcon(":/images/icons_ET/Record.png"), "", this);
     btRecord->setToolTip("Grabar");
-    connect(btRecord, SIGNAL(clicked()), this, SLOT(record()));
+    connect(btRecord, SIGNAL(clicked()), vlcDisplay, SLOT(emitVideo()));
 
     hlButtonOptions->addWidget(btPlay);
     hlButtonOptions->addWidget(btStop);

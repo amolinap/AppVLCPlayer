@@ -341,7 +341,7 @@ void VLCDisplay::emitVideo()
 {
     QStringList arguments;
     //arguments<<"/C"<<"ipconfig";
-    arguments<<"/C"<<"C:\\VideoLAN\\VLC\\vlc.exe -I dummy -vvv C:\\SPARTAAM_Nocturna_1minuto.mp4 --sout=#transcode{vcodec=h264,vb=0,scale=0,acodec=mp4a,ab=128,channels=2,samplerate=4100}:udp{dst=201.168.1.113:9000} :no-sout-rtp-sap :no-sout-standard-sap :ttl=1 :sout-keep";
+    arguments<<"/C"<<"C:\\VideoLAN\\VLC\\vlc.exe -I dummy -vvv C:\\SPARTAAM_Nocturna_1minuto.mp4 --sout=#transcode{vcodec=h264,vb=0,scale=0,acodec=mp4a,ab=128,channels=2,samplerate=4100}:udp{dst=201.168.1.115:12003} :no-sout-rtp-sap :no-sout-standard-sap :ttl=1 :sout-keep";
     qDebug()<<arguments;
 
     processRecord.start("cmd.exe", arguments);

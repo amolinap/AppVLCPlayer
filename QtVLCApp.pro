@@ -33,7 +33,7 @@ FORMS    += QtVLCApp.ui
 
 #HEADERS  += src/QtVN100.h \
 
-win32:RC_ICONS += $$BASEDIR/spartaam.ico
+#win32:RC_ICONS += $$BASEDIR/spartaam.ico
 
 QMAKE_POST_LINK += echo "Copying files"
 QTDIR = C:\\Qt\\Qt5.3.2\\5.3\\mingw482_32\\bin
