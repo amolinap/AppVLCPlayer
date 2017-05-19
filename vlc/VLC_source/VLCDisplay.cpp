@@ -1,4 +1,4 @@
-#include "VLCDisplay.h"
+        #include "VLCDisplay.h"
 #include "ui_VLCDisplay.h"
 
 #define qtu( i ) ((i).toUtf8().constData())
@@ -341,13 +341,16 @@ void VLCDisplay::emitVideo()
 {
     QStringList arguments;
     //arguments<<"/C"<<"ipconfig";
-    arguments<<"/C"<<"C:\\VideoLAN\\VLC\\vlc.exe -I dummy -vvv C:\\SPARTAAM_Nocturna_1minuto.mp4 --sout=#transcode{vcodec=h264,vb=0,scale=0,acodec=mp4a,ab=128,channels=2,samplerate=4100}:udp{dst=201.168.1.115:12003} :no-sout-rtp-sap :no-sout-standard-sap :ttl=1 :sout-keep";
+
+    //arguments<<"/C"<<"C:\\VideoLAN\\VLC\\vlc.exe -I dummy -vvv C:\\SPARTAAM_Nocturna_1minuto.mp4 --sout=#transcode{vcodec=h264,vb=0,scale=0,acodec=mp4a,ab=128,channels=2,samplerate=4100}:udp{dst=201.168.1.115:12003} :no-sout-rtp-sap :no-sout-standard-sap :ttl=1 :sout-keep";
+    arguments<<"/C"<<"C:\\VideoLAN\\VLC\\vlc.exe -I dummy -vvv C:\\SPARTAAM_Nocturna_1minuto.mp4 --sout=#transcode{vcodec=h264,vb=0,scale=0,acodec=mp4a,ab=128,channels=2,samplerate=4100}:rtp{mux=ts,dst=239.255.1.12} :no-sout-rtp-sap :no-sout-standard-sap :ttl=1 :sout-keep --loop";
+
     qDebug()<<arguments;
 
     processRecord.start("cmd.exe", arguments);
     //processRecord.start("cmd.exe", arguments);
     processRecord.waitForFinished();
-    qDebug()<<processRecord.readAll();
+    //qDebug()<<processRecord.readAll();
 }
 
 void VLCDisplay::runRecordVideo()
