@@ -54,8 +54,6 @@ private:
     Ui::VLCVideoWidget *ui;
     VLCDisplay* vlcDisplay;
 
-    QSlider* slVolume;
-    QSlider* slMediaPosition;
     QGroupBox* gbVLCDisplay;
     QPushButton *btPlay;
     QPushButton *btStop;
@@ -65,28 +63,11 @@ private:
     QVBoxLayout *vlDisplay;
     QHBoxLayout *hlMain;
     QHBoxLayout *hlButtonOptions;
-    QLabel *lbTittle, *lbSizeFile;
-    QAction* acVolume, *acMediaPosition;
+    QLabel *lbTittle;
 
-    QString styleButtonRed;
-    QString styleButtonGreen;
-    QString pathVideo;    
-    bool saveAutomatic;
-    bool alertRecord;
+    QString pathVideo;
 
 protected:
-    /** @brief Holds the latitude actual UAV */
-    double lat;
-    /** @brief Holds the longitude actual UAV */
-    double lon;
-    /** @brief Holds the altitude actual UAV */
-    double alt;
-    /**
-     * @brief This method manage the opening a context menu.
-     *
-     * @param event Describe a context menu
-     **/
-    void contextMenuEvent(QContextMenuEvent *);
     /**
      * @brief This method initializa the controls for VLC video player.
      **/
@@ -125,33 +106,6 @@ public slots:
      * @brief This method video storage begins.
      */
     void record();
-    /**
-     * @brief This method updates the status of the video interface.
-     */
-    void updateInterface();
-    /** @brief Receive update the altitude UAS
-      *
-      * @param z New altitude in plane z
-    */
-    void updateAltitude(double z);
-    /**
-      * @brief Enables automatic information stored
-      *
-      * @param saved If enabled the auto saved
-    */
-    void setSavedAutomatic(bool automatic);
-    /**
-     * @brief Edit button style used to store video
-     *
-     * @param status Indicates if stored
-     **/
-    void setRecordStyle(bool status);
-    /**
-     * @brief Get the current size of the file that stores the video
-     *
-     * @param size Size the file
-     **/
-    void setSizeFileVideo(QString size);
     /**
      * @brief Assign the new URL of video storage
      *

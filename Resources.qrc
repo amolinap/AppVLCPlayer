@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/Open.png</file>
+        <file>images/Pause.png</file>
+        <file>images/Play.png</file>
+        <file>images/Server.png</file>
+        <file>images/Stop.png</file>
+        <file>images/Radio.png</file>
+        <file>images/spartaam.ico</file>
+    </qresource>
+</RCC>

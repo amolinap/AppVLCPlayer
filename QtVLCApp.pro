@@ -10,7 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 include(vlc/VLC.pri)
 
-TARGET = SPARTAAM_VectorNav
+TARGET = VideoPlayer
 TEMPLATE = app
 BASEDIR = $$PWD
 TARGETDIR = $$OUT_PWD
@@ -19,28 +19,10 @@ OBJECTS_DIR = $$BUILDDIR/obj
 MOC_DIR = $$BUILDDIR/moc
 UI_DIR = $$BUILDDIR/generated
 
-SOURCES += main.cpp \
-        QtVLCApp.cpp
-
-HEADERS  += QtVLCApp.h
-
-FORMS    += QtVLCApp.ui
-
-#INCLUDEPATH += vlc \
-#        sdk/include/vlc/plugins
-
-#SOURCES += src/QtVN100.cpp \
-
-#HEADERS  += src/QtVN100.h \
-
-#win32:RC_ICONS += $$BASEDIR/spartaam.ico
+SOURCES += main.cpp
 
 QMAKE_POST_LINK += echo "Copying files"
 QTDIR = C:\\Qt\\Qt5.3.2\\5.3\\mingw482_32\\bin
-
-#LIBS += -LC:\VideoLAN\VLC
-#LIBS += -lvlc
-
 
 CONFIG(debug, debug|release) {
     message("Debug...")
@@ -86,4 +68,5 @@ QMAKE_POST_LINK += && copy /Y \"$$QTDIR\\Qt5Svg.dll\" \"$$TARGETDIR\\release\\Qt
 
 }
 
-#DEFINES += __linux__
+RESOURCES += \
+    Resources.qrc

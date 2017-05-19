@@ -16,11 +16,4 @@ FORMS += vlc/VLC_source/VLCVideoWidget.ui \
 #LIBS += -L"C:/Program Files/VideoLAN/VLC" \# if you are at windows os
 LIBS += -L"C:/VideoLAN/VLC" \# if you are at windows os
 
-
 LIBS += -lvlc
-
-#INCLUDEPATH += /Applications/VLC.app/Contents/MacOS/include \
-
-#LIBS += /Applications/VLC.app/Contents/MacOS/lib/libvlc.5.dylib \
-#/Applications/VLC.app/Contents/MacOS/lib/libvlccore.dylib \
-

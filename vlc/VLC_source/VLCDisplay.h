@@ -39,8 +39,6 @@ public:
      **/
     explicit VLCDisplay(const QString path, QWidget *parent = 0);
     virtual ~VLCDisplay();
-    /** @brief Updates the interface to manage data that are displayed and stored */
-    void updateInterface();
     bool getIsRecord(){ return isRecord; }
     bool getIsPlay(){ return isPlay; }
 
@@ -66,10 +64,6 @@ public slots:
      */
     void playVideo();
     /**
-     * @brief This method video storage begins.
-     */
-    void recordVideo();
-    /**
      * @brief This method add new URL media for video player.
      *
      * @param url The URL where the video store
@@ -81,22 +75,6 @@ public slots:
      * @param path The path for instance to play
      **/
     void createInstanceVLC(const QString url);
-    /**
-     * @brief This method receive the directory for creates the subtitle file to store GPS positions.
-     *
-     * @param file Subtitle file for store GPS positions
-     */
-    void createFileSubTitles(QString file);
-    /**
-     * @brief This method reads the process to know the status of video storage.
-     *
-     * @return If the process has been canceled
-     */
-    bool readPIDProcess();
-    /**
-     * @brief This method consultation process state video storage.
-     */
-    void viewPIDProcess();
     /**
      * @brief This method allows assign new path to video open/store.
      *
@@ -110,18 +88,6 @@ public slots:
      **/
     quint64 getGroundTimeNow();
     /**
-     * @brief This method gets the position UAV during flight
-     *
-     * @param lat Latitude UAV in flight
-     * @param lon Longitude UAV in flight
-     * @param alt Altitude UAV in flight
-     **/
-    void setPositionUAV(double lat, double lon, double alt);
-    /** @brief Starts the process of storing video */
-    void runRecordVideo();
-    /** @brief Stops the video storage */
-    void stopRecorVideo();
-    /**
      * @brief Assign the new URL of video storage
      *
      * @param url URL of video storage
@@ -129,7 +95,8 @@ public slots:
     void setVideoURL(const QString& url);
     /** @brief Return the URL of video storage */
     QString getVideoURL();
-    void emitVideo();
+    void startEmitVideo();
+    void stopEmitVideo();
 
 protected:
     /** @brief Saved if video player is URL RTSP */
@@ -138,37 +105,20 @@ protected:
     bool isRecord;
     /** @brief Saved if video player is play */
     bool isPlay;
-    /** @brief Saved if the file is stored subtitle */
-    bool isSubTitles;
     QString url, pathVideo, nameFile;
     QProcess processRecord;
-    /** @brief Ready size file where store video */
-    bool readingSizeFile;
-    int idProcess, option;
-    /** @brief Holds name file where store the position GPS subtitles */
-    QFile *fileSubtitles;
-    /** @brief Count number line for subtitles */
-    int countSubTitle;
     /** @brief The time initialization for record video */
     quint64 startTime;
-    /** @brief Holds the latitude actual UAV */
-    double lat;
-    /** @brief Holds the longitude actual UAV */
-    double lon;
-    /** @brief Holds the altitude actual UAV */
-    double alt;
-    qint64 sizeFileRecord;
     void resizeEvent(QResizeEvent *size);
     /**
      * @brief This method manage the close window event.
      *
      * @param event Describe a close event
      **/
-    void closeEvent(QCloseEvent *event);    
+    void closeEvent(QCloseEvent *event);
 
-signals:
-    void emitRecordVideo(bool);
-    void emitSizeFile(QString);
+    QProcess closeEmit;
+
 };
 
 #endif // VLCDISPLAY_H

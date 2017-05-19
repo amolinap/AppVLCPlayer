@@ -12,74 +12,46 @@
 #define qtu( i ) ((i).toUtf8().constData())
 
 VLCVideoWidget::VLCVideoWidget(const QString path, QWidget *parent) :
-        QWidget(parent),
-        //isRecord(false),
-        //isPlay(false),
-        //isRTSP(false),
-        //fileSubtitles(NULL),
-        ui(new Ui::VLCVideoWidget)
+    QWidget(parent),
+    ui(new Ui::VLCVideoWidget)
 {
     ui->setupUi(this);
 
     pathVideo = path;
-    lat = 0;
-    lon = 0;
-    alt = 0;
-    alertRecord = false;
 
     vlcDisplay = new VLCDisplay(pathVideo, this);
-    connect(vlcDisplay, SIGNAL(emitRecordVideo(bool)), this, SLOT(setRecordStyle(bool)));
-    connect(vlcDisplay, SIGNAL(emitSizeFile(QString)), this, SLOT(setSizeFileVideo(QString)));
+
     createControlsVLC();
-
-    saveAutomatic = true;
-
-    QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(updateInterface()));
-    timer->start(1000);
-
-    //qDebug() << "CHECK END VLCVIDEOWIDGET "<<QTime::currentTime().toString("HHmmss");
 }
 
 void VLCVideoWidget::createControlsVLC()
 {
-    slVolume = new QSlider(Qt::Horizontal);
-    QObject::connect(slVolume, SIGNAL(sliderMoved(int)), this, SLOT(changeVolume(int)));
-    slVolume->setValue(80);
-
-    slMediaPosition = new QSlider(Qt::Horizontal);
-    slMediaPosition->setMaximum(1000);
-    QObject::connect(slMediaPosition, SIGNAL(sliderMoved(int)), this, SLOT(changePosition(int)));
-
     vlDisplay = new QVBoxLayout(this);
-    vlDisplay->setContentsMargins(2,2,2,2);    
-    vlDisplay->addWidget(vlcDisplay);    
-    vlDisplay->addWidget(slVolume);
-    vlDisplay->addWidget(slMediaPosition);
-    slVolume->setVisible(false);
-    slMediaPosition->setVisible(false);
+    vlDisplay->setContentsMargins(2,2,2,2);
+    vlDisplay->addWidget(vlcDisplay);
 
     hlButtonOptions = new QHBoxLayout();
-    btPlay = new QPushButton(QIcon(":/images/icons_ET/Play.png"), "", this);
-    btPlay->setToolTip("Reproducir");
+    btPlay = new QPushButton(QIcon(":/images/Play.png"), tr(""), this);
+    btPlay->setToolTip(tr("Play"));
     connect(btPlay, SIGNAL(clicked()), this, SLOT(play()));
 
-    btStop = new QPushButton(QIcon(":/images/icons_ET/Stop.png"), "", this);
-    btStop->setToolTip("Detener");
+    btStop = new QPushButton(QIcon(":/images/Stop.png"), tr(""), this);
+    btStop->setToolTip(tr("Stop"));
     connect(btStop, SIGNAL(clicked()), this, SLOT(stop()));
 
-    btOpenRTSP = new QPushButton(QIcon(":/images/icons_ET/Radio.png"), "", this);
-    btOpenRTSP->setToolTip("Abrir RTSP");
+    btOpenRTSP = new QPushButton(QIcon(":/images/Server.png"), tr(""), this);
+    btOpenRTSP->setToolTip(tr("Open Network"));
     connect(btOpenRTSP, SIGNAL(clicked()), this, SLOT(openRTSP()));
 
-    btOpenFile = new QPushButton(QIcon(":/images/icons_ET/Open.png"), "", this);
-    btOpenFile->setToolTip("Abrir Video");
+    btOpenFile = new QPushButton(QIcon(":/images/Open.png"), tr(""), this);
+    btOpenFile->setToolTip(tr("Open File"));
     connect(btOpenFile, SIGNAL(clicked()), this, SLOT(openFile()));
 
-    btRecord = new QPushButton(QIcon(":/images/icons_ET/Record.png"), "", this);
-    btRecord->setToolTip("Grabar");
-    connect(btRecord, SIGNAL(clicked()), vlcDisplay, SLOT(emitVideo()));
+    btRecord = new QPushButton(QIcon(":/images/Radio.png"), "", this);
+    btRecord->setToolTip(tr("Emitir"));
+    connect(btRecord, SIGNAL(clicked()), vlcDisplay, SLOT(startEmitVideo()));
 
+    hlButtonOptions->setAlignment(Qt::AlignLeft);
     hlButtonOptions->addWidget(btPlay);
     hlButtonOptions->addWidget(btStop);
     hlButtonOptions->addWidget(btOpenRTSP);
@@ -92,49 +64,27 @@ void VLCVideoWidget::createControlsVLC()
     lbTittle = new QLabel(this);
     lbTittle->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
     lbTittle->setText("");
-    lbSizeFile = new QLabel(this);
-    lbSizeFile->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
-    lbSizeFile->setText("----");
     hlLabelMedia->addWidget(lbTittle);
-    hlLabelMedia->addWidget(lbSizeFile);
     vlDisplay->addLayout(hlLabelMedia);
 
-    styleButtonRed = QString("QAbstractButton { background-color: rgb(255, 5, 0); border-color: rgb(10, 10, 10)} QAbstractButton:checked { border: 2px solid #379AC3; }");
-    styleButtonGreen = QString("QAbstractButton { background-color: rgb(11, 255, 0); border-color: rgb(10, 10, 10)} QAbstractButton:checked { border: 2px solid #379AC3; }");
-
-    btRecord->setStyleSheet(styleButtonGreen);
-    //processRecord.setProcessChannelMode(QProcess::MergedChannels);
     ui->groupBox->setLayout(vlDisplay);
 
-    acVolume = new QAction("Ver control volumen", this);
-    acMediaPosition = new QAction("Ver linea de avance", this);
-    acVolume->setCheckable(true);
-    acVolume->setChecked(false);
-    acMediaPosition->setCheckable(true);
-    acMediaPosition->setChecked(false);
+    setWindowIcon(QIcon(":/images/spartaam.ico"));
+    setWindowTitle(tr("ISR Video"));
 }
 
 void VLCVideoWidget::play()
 {
-    //if(!lbTittle->text().isEmpty())
+    if(!lbTittle->text().isEmpty())
     {
         vlcDisplay->playVideo();
-
-//        if(saveAutomatic)
-//        {
-//            vlcDisplay->runRecordVideo();
-//        }
     }
 }
 
 void VLCVideoWidget::stop()
 {
     vlcDisplay->stopVideo();
-
-    if(saveAutomatic)
-    {
-        vlcDisplay->stopRecorVideo();
-    }
+    vlcDisplay->stopEmitVideo();
 }
 
 VLCVideoWidget::~VLCVideoWidget()
@@ -154,14 +104,14 @@ void VLCVideoWidget::openRTSP()
     QString text = QInputDialog::getItem(this, tr("Ingrese la URL"), tr("URL RTSP Axis:"), url, 0, true, &ok);
 
     if (ok && !text.isEmpty())
-    {        
+    {
         addURL(text, true);
     }
 }
 
 void VLCVideoWidget::openFile()
 {
-    QString fileName(QFileDialog::getOpenFileName(this, tr("Abrir"), pathVideo, tr("Archivo de video (*.avi | *.mp4 | *.mpg | *.mov)")));//"settings/", tr("Movie Files (*.avi)")));
+    QString fileName(QFileDialog::getOpenFileName(this, tr("Abrir"), pathVideo, tr("Archivo de video (*.avi | *.mp4 | *.mpg | *.mov)")));
 
     if (fileName.isEmpty())
         return;
@@ -171,7 +121,7 @@ void VLCVideoWidget::openFile()
 
 void VLCVideoWidget::addURL(const QString url, bool isRTSP)
 {
-    vlcDisplay->addURL(url, isRTSP);    
+    vlcDisplay->addURL(url, isRTSP);
     lbTittle->setText(url);
 
     if(!isRTSP)
@@ -185,80 +135,13 @@ void VLCVideoWidget::addURL(const QString url, bool isRTSP)
 void VLCVideoWidget::record()
 {
     //vlcDisplay->recordVideo();
-    vlcDisplay->emitVideo();
+    vlcDisplay->startEmitVideo();
 }
 
 void VLCVideoWidget::changePATH(const QString &path)
 {
     this->pathVideo = path;
     vlcDisplay->changePATH(path);
-}
-
-void VLCVideoWidget::contextMenuEvent(QContextMenuEvent *event)
-{
-    QMenu menu(this);
-    menu.addAction(acVolume);
-    menu.addAction(acMediaPosition);
-    menu.exec(event->globalPos());
-}
-
-void VLCVideoWidget::updateInterface()
-{
-    vlcDisplay->setPositionUAV(this->lat, this->lon, this->alt);
-    vlcDisplay->updateInterface();
-
-    if(!vlcDisplay->getIsRecord())
-    {
-        if(alertRecord)
-        {
-            ui->groupBox->setStyleSheet("QGroupBox {border-color: #FF3333;}");
-        }
-        else
-        {
-            ui->groupBox->setStyleSheet("QGroupBox {border-color: #66FF33;}");
-        }
-
-        alertRecord = !alertRecord;
-    }
-}
-
-void VLCVideoWidget::updateAltitude(double z)
-{
-    this->alt = z;
-}
-
-void VLCVideoWidget::setSavedAutomatic(bool automatic)
-{
-    Q_UNUSED(automatic);
-
-    saveAutomatic = automatic;
-
-    if(saveAutomatic)
-    {
-        vlcDisplay->runRecordVideo();
-    }
-    else
-    {
-        vlcDisplay->stopRecorVideo();
-    }
-}
-
-void VLCVideoWidget::setRecordStyle(bool status)
-{
-    if(status)
-    {
-        btRecord->setStyleSheet(styleButtonRed);
-        ui->groupBox->setStyleSheet("QGroupBox {border-color: #6495ED;}");
-    }
-    else
-    {
-        btRecord->setStyleSheet(styleButtonGreen);
-    }
-}
-
-void VLCVideoWidget::setSizeFileVideo(QString size)
-{
-    lbSizeFile->setText(size);
 }
 
 void VLCVideoWidget::setVideoURL(const QString &url)
